@@ -1,0 +1,100 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ include file="/ssi/ssi.jsp"%>
+<%
+	List<BbsDTO> list = dao.list();
+	Iterator<BbsDTO> iter = list.iterator();
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<style type="text/css">
+* {
+	font-family: gulim;
+	font-size: 20px;
+}
+</style>
+
+<script>
+	function read(bbsno){
+		var url = "./read.jsp";
+		url += "?bbsno="+bbsno;
+		location.href=url;
+	}
+
+
+
+</script>
+
+
+<link href="<%=root%>/css/style.css" rel="Stylesheet" type="text/css">
+</head>
+<!-- *********************************************** -->
+<body>
+	<jsp:include page="/menu/top.jsp" flush="false" />
+	<!-- *********************************************** -->
+
+	<DIV class="title">게시판목록</DIV>
+
+	<TABLE>
+		<TR>
+			<TH>번호</TH>
+			<TH>제목</TH>
+			<TH>성명</TH>
+			<TH>조회수</TH>
+			<TH>등록일</TH>
+			<TH>grpno</TH>
+			<TH>indent</TH>
+			<TH>ansnum</TH>
+		</TR>
+		<% if(list.size()==0){ %>
+			<tr>
+				<TD colspan="8">등록된 글이 없습니다</TD>
+			</tr>		
+		
+		<% }else{ 
+		 while(iter.hasNext()){ 
+		 	BbsDTO dto = iter.next();
+		 %>
+		<tr>
+			<td><%=dto.getBbsno() %></td>
+			<td>
+			
+				<%
+					for(int i=0;i< dto.getIndent(); i++){
+						out.println("&nbsp;&nbsp;");			
+						
+					}
+					if(dto.getIndent()>0){
+						out.println("[답변]");
+					}
+				
+				%>
+				
+				<a href="javascript:read('<%=dto.getBbsno()%>')"><%=dto.getTitle() %></a>
+				
+			</td>
+			<td><%=dto.getWname() %></td>
+			<td><%=dto.getViewcnt() %></td>
+			<td><%=dto.getWdate().substring(0,10) %></td>
+			<td><%=dto.getGrpno()%></td>
+			<td><%=dto.getIndent()%></td>
+			<td><%=dto.getAnsnum()%></td>
+		</tr>
+		<%
+			}
+		}
+		%>
+		
+	</TABLE>
+
+	<DIV class='bottom'>
+		<input type='button' value='등록'	onclick="location.href='./createForm.jsp'">
+	</DIV>
+
+<!-- *********************************************** -->
+	<jsp:include page="/menu/bottom.jsp" flush="false" />
+</body>
+<!-- *********************************************** -->
+</html>
